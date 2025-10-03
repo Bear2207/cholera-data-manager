@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgis/postgis:latest
+    container_name: cousp_maladie_DB
+    restart: always
+    environment:
+      POSTGRES_USER: bearing
+      POSTGRES_PASSWORD: Couspdata
+      POSTGRES_DB: maladie_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/data:/db/data       # 🔹 Montage du dossier CSV
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_cousp
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: data.analyse@cousp.org
+      PGADMIN_DEFAULT_PASSWORD: DataCousp2025
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: metabase_cousp
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_FILE: /metabase.db
+    volumes:
+      - metabase_data:/metabase.db
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  metabase_data:
