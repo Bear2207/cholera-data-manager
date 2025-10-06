@@ -35,7 +35,7 @@ df = df[colonnes]
 df["population"] = df["population"].fillna(0).astype(int)
 df["cas_total"] = df["cas_total"].fillna(0).astype(int)
 df["deces_total"] = df["deces_total"].fillna(0).astype(int)
-df["letalite"] = df["letalite"].fillna(0).astype(float)
+df["letalite"] = (df["letalite"] * 100).round().astype(float)
 df["taux_attaque"] = df["taux_attaque"].fillna(0).astype(float)
 
 # Export en CSV
