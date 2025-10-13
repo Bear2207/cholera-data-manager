@@ -7,7 +7,8 @@ services:
     environment:
       POSTGRES_USER: bearing
       POSTGRES_PASSWORD: Couspdata
-      POSTGRES_DB: maladie_db
+      POSTGRES_MULTIPLE_DATABASES: "maladie_db_2021,maladie_db_2022,maladie_db_2023,maladie_db_2024,maladie_db_2025"
+      grant_all_privileges_on_multiple_databases_to: bearing
     ports:
       - "5432:5432"
     volumes:
@@ -21,7 +22,7 @@ services:
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: data.analyse@cousp.org
-      PGADMIN_DEFAULT_PASSWORD: DataCousp2025
+      PGADMIN_DEFAULT_PASSWORD: DataCousp
     ports:
       - "5050:80"
     depends_on:
