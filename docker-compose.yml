@@ -2,13 +2,14 @@ version: "3.9"
 services:
   postgres:
     image: postgis/postgis:latest
-    container_name: cousp_maladie_DB
+    container_name: cousp_DB
     restart: always
     environment:
       POSTGRES_USER: bearing
       POSTGRES_PASSWORD: Couspdata
-      POSTGRES_MULTIPLE_DATABASES: "maladie_db_2021,maladie_db_2022,maladie_db_2023,maladie_db_2024,maladie_db_2025"
-      grant_all_privileges_on_multiple_databases_to: bearing
+      POSTGRES_DB: ll_cousp
+      grant_all_privileges to: "bearing"
+
     ports:
       - "5432:5432"
     volumes:
