@@ -1,47 +1,119 @@
 version: "3.9"
+
 services:
   postgres:
-    image: postgis/postgis:latest
-    container_name: cousp_DB
+    image: postgis/postgis:16
+    container_name: cousp_db
     restart: always
     environment:
-      POSTGRES_USER: bearing
-      POSTGRES_PASSWORD: Couspdata
-      POSTGRES_DB: ll_cousp
-      grant_all_privileges to: "bearing"
-
+      POSTGRES_USER: ${POSTGRES_USER:-bearing}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Couspdata}
+      POSTGRES_DB: ${POSTGRES_DB:-ll_cousp}
     ports:
       - "5432:5432"
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./db/data:/db/data       # 🔹 Montage du dossier CSV
+      - ./db/data:/db/data
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cousp_network
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     container_name: pgadmin_cousp
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: data.analyse@cousp.org
-      PGADMIN_DEFAULT_PASSWORD: DataCousp
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-data.analyse@cousp.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-DataCousp}
     ports:
       - "5050:80"
     depends_on:
       - postgres
+    networks:
+      - cousp_network
 
   metabase:
     image: metabase/metabase:latest
     container_name: metabase_cousp
     restart: always
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-bearing}
+      MB_DB_PASS: ${POSTGRES_PASSWORD:-Couspdata}
+      MB_DB_HOST: postgres
     ports:
       - "3000:3000"
-    environment:
-      MB_DB_FILE: /metabase.db
-    volumes:
-      - metabase_data:/metabase.db
     depends_on:
       - postgres
+    networks:
+      - cousp_network
+
+  superset:
+    image: apache/superset:latest
+    container_name: superset_cousp
+    restart: always
+    environment:
+      SUPERSET_ENV: production
+      SUPERSET_LOAD_EXAMPLES: "no"
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:-thisISaSECRET_1234}
+    ports:
+      - "8088:8088"
+    command: >
+      bash -c "
+        superset db upgrade &&
+        superset fab create-admin 
+          --username admin 
+          --password admin 
+          --firstname Admin 
+          --lastname User 
+          --email admin@cousp.org &&
+        superset init &&
+        superset run -h 0.0.0.0 -p 8088"
+    depends_on:
+      - postgres
+    volumes:
+      - superset_data:/app/superset_home
+    networks:
+      - cousp_network
+
+  anaconda:
+    image: continuumio/anaconda3:latest
+    container_name: anaconda_cousp
+    restart: always
+    ports:
+      - "8889:8888"    # 🔹 Anaconda accessible via port 8889
+    volumes:
+      - ./notebooks:/opt/notebooks
+    working_dir: /opt/notebooks
+    command: >
+      bash -c "
+        jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --NotebookApp.token='anaconda2025' --no-browser"
+    depends_on:
+      - postgres
+    networks:
+      - cousp_network
+
+  jupyterlab:
+    image: jupyter/base-notebook:latest
+    container_name: jupyterlab_cousp
+    restart: always
+    environment:
+      JUPYTER_TOKEN: cholera2025
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    depends_on:
+      - postgres
+    networks:
+      - cousp_network
 
 volumes:
   postgres_data:
-  metabase_data:
+  superset_data:
+
+networks:
+  cousp_network:
+    driver: bridge
