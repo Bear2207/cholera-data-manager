@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgis/postgis:latest
@@ -74,11 +76,12 @@ services:
       - ./scripts:/app/scripts
       - ./data:/app/data
       - ./db/data:/app/db_data
+      - ./output:/app/output
     working_dir: /app
     command: >
       bash -c "
         pip install -r scripts/requirements.txt &&
-        python scripts/00_main.py"
+        python scripts/main.py"
     depends_on:
       - postgres
     networks:
