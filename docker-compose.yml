@@ -80,8 +80,10 @@ services:
     working_dir: /app
     command: >
       bash -c "
+        pip install --upgrade pip &&
         pip install -r scripts/requirements.txt &&
-        python scripts/main.py"
+        pip install python-levenshtein &&
+        python -m scripts.main"
     depends_on:
       - postgres
     networks:
