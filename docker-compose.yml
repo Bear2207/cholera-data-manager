@@ -15,8 +15,6 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./db/data:/db/data
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - cousp_network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -29,8 +27,6 @@ services:
       - "5050:80"
     depends_on:
       - postgres
-    networks:
-      - cousp_network
 
   metabase:
     image: metabase/metabase:latest
@@ -44,56 +40,7 @@ services:
       - metabase_data:/metabase.db
     depends_on:
       - postgres
-    networks:
-      - cousp_network
-
-  superset:
-    image: apache/superset:latest
-    container_name: superset_cousp
-    restart: always
-    environment:
-      SUPERSET_SECRET_KEY: "secret_key_cholera"
-      ADMIN_USERNAME: admin
-      ADMIN_FIRST_NAME: "bearing"
-      ADMIN_LAST_NAME: "kalela"
-      ADMIN_EMAIL: admin@cousp.org
-      ADMIN_PASSWORD: admin123
-      SUPERSET_LOAD_EXAMPLES: "no"
-    volumes:
-      - superset_home:/app/superset_home
-    ports:
-      - "8088:8088"
-    depends_on:
-      - postgres
-    networks:
-      - cousp_network
-
-  cholera-pipeline:
-    image: python:3.9-slim
-    container_name: cholera_pipeline
-    restart: unless-stopped
-    volumes:
-      - ./scripts:/app/scripts
-      - ./data:/app/data
-      - ./db/data:/app/db_data
-      - ./output:/app/output
-    working_dir: /app
-    command: >
-      bash -c "
-        pip install --upgrade pip &&
-        pip install -r scripts/requirements.txt &&
-        pip install python-levenshtein &&
-        python -m scripts.main"
-    depends_on:
-      - postgres
-    networks:
-      - cousp_network
 
 volumes:
   postgres_data:
   metabase_data:
-  superset_home:
-
-networks:
-  cousp_network:
-    driver: bridge
