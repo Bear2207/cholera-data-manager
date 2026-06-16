@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: bearing
       POSTGRES_PASSWORD: Couspdata
-      POSTGRES_DB: ll_cousp
+      POSTGRES_DB: ids_db
     ports:
       - "5432:5432"
     volumes:
@@ -40,6 +40,25 @@ services:
       - metabase_data:/metabase.db
     depends_on:
       - postgres
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: cousp_web
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/html
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=ids_db
+      - DB_USER=bearing
+      - DB_PASS=Couspdata
 
 volumes:
   postgres_data:
