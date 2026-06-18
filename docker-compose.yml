@@ -64,12 +64,7 @@ services:
     depends_on:
       - postgres
     command: >
-      sh -c "
-      superset db upgrade &&
-      superset fab create-admin --username $SUPERSET_ADMIN_USERNAME --firstname $SUPERSET_ADMIN_FIRST_NAME --lastname $SUPERSET_ADMIN_LAST_NAME --email $SUPERSET_ADMIN_EMAIL --password $SUPERSET_ADMIN_PASSWORD || true &&
-      superset init &&
-      gunicorn -w 5 -k gevent --timeout 120 --bind 0.0.0.0:8088 'superset.app:create_app()'
-      "
+      sh -c " superset db upgrade && superset fab create-admin --username $SUPERSET_ADMIN_USERNAME --firstname $SUPERSET_ADMIN_FIRST_NAME --lastname $SUPERSET_ADMIN_LAST_NAME --email $SUPERSET_ADMIN_EMAIL --password $SUPERSET_ADMIN_PASSWORD || true && superset init && gunicorn -w 5 -k gevent --timeout 120 --bind 0.0.0.0:8088 'superset.app:create_app()' "
 
 volumes:
   postgres_data:
