@@ -3,8 +3,8 @@ from pathlib import Path
 import datetime
 
 # Paramètres
-ANNEE_REF = 2026  # Année de référence pour calculer les semaines
-fichier_excel = Path("/cholera-data-manager/db/IDS_RDC.xlsx")
+ANNEE_REF = 2025  # Année de référence pour calculer les semaines
+fichier_excel = Path("C:\\Users\\beari\\Documents\\cholera-data-manager\\db\\IDS_2025.xlsx")
 feuille = "IDS_RDC"
 
 # Lecture
@@ -87,7 +87,7 @@ for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
 # Export
-fichier_csv = Path("C:\\Users\\beari\\Documents\\cholera-data-manager\\cholera-data-manager\\db\\data\\donnees_maladie.csv")
+fichier_csv = Path("C:\\Users\\beari\\Documents\\cholera-data-manager\\db\\data\\donnees_maladie.csv")
 df.to_csv(fichier_csv, index=False, na_rep="NULL")
 
 print(f"✅ CSV généré avec dates recalculées pour l'année {ANNEE_REF} : {fichier_csv}")

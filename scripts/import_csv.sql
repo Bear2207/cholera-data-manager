@@ -3,7 +3,13 @@
 -- et que le chemin est correct.
 -- executé dans le conteneur postgres via psql -U bearing -d ids_db -f /scripts/import_csv.sql
 
-docker exec -it cousp_db psql -U bearing -d ids_db -c "\COPY cas_maladie (
+-- Copier d'abord le CSV dans le conteneur PostgreSQL :
+--   docker cp ./db/data/donnees_maladie.csv cousp_db:/tmp/donnees_maladie.csv
+
+-- Puis exécuter dans le conteneur :
+--   docker exec -it cousp_db psql -U bearing -d ids_db -f /scripts/import_csv.sql
+
+\COPY cas_maladie (
     code_zone, pays, province, zone_sante, population,
     num_semaine, debut_semaine, maladie,
     cas_tnn, deces_tnn,
@@ -14,7 +20,4 @@ docker exec -it cousp_db psql -U bearing -d ids_db -c "\COPY cas_maladie (
     cas_total, deces_total,
     letalite, taux_attaque,
     rec_status, unique_key
-)
-
-FROM 'C:\Users\beari\Documents\cholera-data-manager\cholera-data-manager\db\data\donnees_maladie.csv'
-DELIMITER ',' CSV HEADER NULL 'NULL';
+) FROM '/tmp/donnees_maladie.csv' DELIMITER ',' CSV HEADER NULL 'NULL';

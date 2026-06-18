@@ -27,6 +27,8 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
   metabase:
     image: metabase/metabase:latest
@@ -41,25 +43,36 @@ services:
     depends_on:
       - postgres
 
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
-    container_name: cousp_web
+  superset:
+    image: apache/superset:latest
+    container_name: superset_cousp
     restart: always
     ports:
-      - "8080:80"
+      - "8088:8088"
+    environment:
+      SUPERSET_ENV: production
+      SUPERSET_LOAD_EXAMPLES: "no"
+      SUPERSET_HOME: /app/superset_home
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://bearing:Couspdata@postgres:5432/ids_db
+      SUPERSET_ADMIN_USERNAME: admin
+      SUPERSET_ADMIN_FIRST_NAME: Admin
+      SUPERSET_ADMIN_LAST_NAME: User
+      SUPERSET_ADMIN_EMAIL: admin@cousp.org
+      SUPERSET_ADMIN_PASSWORD: Admin123
     volumes:
-      - ./app:/var/www/html
+      - superset_home:/app/superset_home
     depends_on:
       - postgres
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=ids_db
-      - DB_USER=bearing
-      - DB_PASS=Couspdata
+    command: >
+      sh -c "
+      superset db upgrade &&
+      superset fab create-admin --username $SUPERSET_ADMIN_USERNAME --firstname $SUPERSET_ADMIN_FIRST_NAME --lastname $SUPERSET_ADMIN_LAST_NAME --email $SUPERSET_ADMIN_EMAIL --password $SUPERSET_ADMIN_PASSWORD || true &&
+      superset init &&
+      gunicorn -w 5 -k gevent --timeout 120 --bind 0.0.0.0:8088 'superset.app:create_app()'
+      "
 
 volumes:
   postgres_data:
   metabase_data:
+  pgadmin_data:
+  superset_home:
