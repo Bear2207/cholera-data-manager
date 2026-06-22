@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS cas_maladie (
     letalite FLOAT,
     taux_attaque FLOAT,
     rec_status INTEGER,
-    unique_key INTEGER
+    unique_key INTEGER,
+    CONSTRAINT unique_case UNIQUE (code_zone, num_semaine, maladie)
 );
-ALTER TABLE cas_maladie ADD CONSTRAINT unique_case UNIQUE (code_zone, num_semaine, maladie);
 
 -- Table pour les données LL Cholera (adaptée à l'Excel)
 CREATE TABLE IF NOT EXISTS cas_ll (

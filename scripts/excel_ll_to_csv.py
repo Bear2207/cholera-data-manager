@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Lire le fichier Excel
-file_path = "C:\\Users\\beari\\Documents\\cholera-data-manager\\db\\rdc_compilation_LL_Cholera_SE01_2026_04_20_16_37_31.xlsx"
-df = pd.read_excel(file_path, sheet_name="LL_Cholera", engine="openpyxl")
+file_path = "C:\\Users\\beari\\Documents\\cholera-data-manager\\db\\BDD.xlsx"
+df = pd.read_excel(file_path, sheet_name="Cas_ll", engine="openpyxl")
 
 # Supprimer les colonnes "Provenance" et "N" (si elles existent)
 cols_to_drop = ["Provenance", "N"]
