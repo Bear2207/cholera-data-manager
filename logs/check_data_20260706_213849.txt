@@ -1,0 +1,5 @@
+('cholera.cas_maladie', 'count', 262862)
+('cholera.cas_ll', 'count', 82178)
+('cholera.cas_maladie', 'null_key_count', 0)
+('cholera.cas_ll', 'null_patient_identifiers', 22)
+('cholera.cas_maladie', 'duplicate_error', 'dictionary update sequence element #0 has length 11; 2 is required')

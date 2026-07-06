@@ -6,17 +6,28 @@ CREATE SCHEMA IF NOT EXISTS cholera;
 SET search_path TO cholera, public;
 
 -- Domaines réutilisables et validations simples
-CREATE DOMAIN IF NOT EXISTS positive_integer AS INTEGER
-    CHECK (VALUE >= 0);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'positive_integer') THEN
+        CREATE DOMAIN positive_integer AS INTEGER
+            CHECK (VALUE >= 0);
+    END IF;
 
-CREATE DOMAIN IF NOT EXISTS week_number AS SMALLINT
-    CHECK (VALUE BETWEEN 1 AND 53);
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'week_number') THEN
+        CREATE DOMAIN week_number AS SMALLINT
+            CHECK (VALUE BETWEEN 1 AND 53);
+    END IF;
 
-CREATE DOMAIN IF NOT EXISTS percentage AS NUMERIC(5,2)
-    CHECK (VALUE >= 0 AND VALUE <= 100);
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'percentage') THEN
+        CREATE DOMAIN percentage AS NUMERIC(5,2)
+            CHECK (VALUE >= 0 AND VALUE <= 100);
+    END IF;
 
-CREATE DOMAIN IF NOT EXISTS non_empty_text AS TEXT
-    CHECK (char_length(trim(BOTH FROM VALUE)) > 0);
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'non_empty_text') THEN
+        CREATE DOMAIN non_empty_text AS TEXT
+            CHECK (char_length(trim(BOTH FROM VALUE)) > 0);
+    END IF;
+END$$;
 
 -- Trigger helper for updated_at
 CREATE OR REPLACE FUNCTION cholera.refresh_updated_at()
