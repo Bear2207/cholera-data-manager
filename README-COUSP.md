@@ -1,16 +1,24 @@
-Ton guide d’utilisation :
+Guide d’utilisation moderne du stack Cholera Data Manager :
 
-1. docker-compose up -d → lance tout l’environnement.
-2. Mettre ton Excel brut dans le dossier scripts/, lancer excel_to_csv.py.
-3. Le CSV se retrouve dans db/data/.
-4. Importer avec PostgreSQL :
-   - docker cp ./db/data/donnees_maladie.csv cousp_db:/tmp/donnees_maladie.csv
-   - docker exec -it cousp_db psql -U bearing -d ids_db -f /scripts/import_csv.sql
-5. Connecter Excel, Metabase ou Superset pour visualiser.
+1. Démarrer l’environnement :
+   - docker compose up -d
+   - ou powershell -ExecutionPolicy Bypass -File .\scripts\start-stack.ps1
+2. Charger les données dans PostgreSQL :
+   - installer les dépendances Python si nécessaire :
+     `pip install -r requirements.txt`
+   - exécuter `python scripts/load_data.py`
+3. Ouvrir l’interface :
+   - PgAdmin : http://localhost:5050
 
-Services exposés :
-- PgAdmin : http://localhost:5050 (email : data.analyse@cousp.org / mot de passe : DataCousp)
-- Metabase : http://localhost:3000
-- Superset : http://localhost:8088 (admin / Admin123)
+Identifiants par défaut :
+- PostgreSQL : utilisateur bearing / mot de passe Couspdata / base ids_db
+- PgAdmin : data.analyse@cousp.org / DataCousp
+- Superset : admin / Admin123
 
-👉 Avec cette stack tu as une solution complète : collecte → base de données → exploration & dashboards → rapports.
+Services inclus :
+- PostgreSQL + PostGIS pour les données géographiques
+- pgAdmin pour administrer la base
+- Metabase pour les tableaux de bord
+- Superset pour l’analyse et la visualisation avancée
+
+👉 Cette version offre un environnement complet, reproductible et prêt pour la collecte, l’import, l’analyse et la diffusion des données.

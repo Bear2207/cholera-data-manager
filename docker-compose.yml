@@ -1,73 +1,50 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
     image: postgis/postgis:latest
-    container_name: cousp_db
-    restart: always
+    container_name: cholera-postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: bearing
-      POSTGRES_PASSWORD: Couspdata
-      POSTGRES_DB: ids_db
+      POSTGRES_DB: ${POSTGRES_DB:-ids_db}
+      POSTGRES_USER: ${POSTGRES_USER:-bearing}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Couspdata}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./db/data:/db/data
       - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./db/data:/data:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bearing} -d ${POSTGRES_DB:-ids_db}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - cholera-network
 
   pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin_cousp
-    restart: always
+    image: dpage/pgadmin4:8.14
+    container_name: cholera-pgadmin
+    restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: data.analyse@cousp.org
-      PGADMIN_DEFAULT_PASSWORD: DataCousp
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-data.analyse@cousp.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-DataCousp}
     ports:
-      - "5050:80"
+      - "${PGADMIN_PORT:-5050}:80"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - pgadmin_data:/var/lib/pgadmin
-
-  metabase:
-    image: metabase/metabase:latest
-    container_name: metabase_cousp
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      MB_DB_FILE: /metabase.db
-    volumes:
-      - metabase_data:/metabase.db
-    depends_on:
-      - postgres
-
-  superset:
-    image: apache/superset:latest
-    container_name: superset_cousp
-    restart: always
-    ports:
-      - "8088:8088"
-    environment:
-      SUPERSET_ENV: production
-      SUPERSET_LOAD_EXAMPLES: "no"
-      SUPERSET_HOME: /app/superset_home
-      SUPERSET_DATABASE_URI: postgresql+psycopg2://bearing:Couspdata@postgres:5432/ids_db
-      SUPERSET_ADMIN_USERNAME: admin
-      SUPERSET_ADMIN_FIRST_NAME: Admin
-      SUPERSET_ADMIN_LAST_NAME: User
-      SUPERSET_ADMIN_EMAIL: admin@cousp.org
-      SUPERSET_ADMIN_PASSWORD: Admin123
-    volumes:
-      - superset_home:/app/superset_home
-    depends_on:
-      - postgres
-    command: >
-      sh -c " superset db upgrade && superset fab create-admin --username $SUPERSET_ADMIN_USERNAME --firstname $SUPERSET_ADMIN_FIRST_NAME --lastname $SUPERSET_ADMIN_LAST_NAME --email $SUPERSET_ADMIN_EMAIL --password $SUPERSET_ADMIN_PASSWORD || true && superset init && gunicorn -w 5 -k gevent --timeout 120 --bind 0.0.0.0:8088 'superset.app:create_app()' "
+    networks:
+      - cholera-network
 
 volumes:
   postgres_data:
-  metabase_data:
   pgadmin_data:
-  superset_home:
+
+networks:
+  cholera-network:
+    driver: bridge
