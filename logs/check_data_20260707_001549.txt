@@ -1,0 +1,5 @@
+('cholera.cas_maladie', 'count', 378777)
+('cholera.cas_ll', 'count', 41089)
+('cholera.cas_maladie', 'null_key_count', 0)
+('cholera.cas_ll', 'null_patient_identifiers', 11)
+('cholera.cas_maladie', 'duplicate_samples', [('DPSSUBAN07', 7, 'DIARRHEE DHY M5', 2), ('DPSSUBAN07', 7, 'FIEVRE TYPHOIDE', 2), ('DPSSUBAN07', 7, 'IRA', 2), ('DPSSUBAN07', 7, 'MONKEYPOX', 2), ('DPSSUBAN07', 7, 'PALUDISME CONF', 2)])

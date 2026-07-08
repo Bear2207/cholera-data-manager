@@ -49,6 +49,43 @@ def run_checks():
             report.append(('cholera.cas_maladie', 'duplicate_samples', [tuple(r) for r in d]))
         except Exception as e:
             report.append(('cholera.cas_maladie', 'duplicate_error', str(e)))
+
+        # relational lookup sync checks
+        try:
+            c = conn.execute(text(
+                "select count(*) from cholera.cas_maladie "
+                "where (pays is not null and pays_id is null) "
+                "or (province is not null and province_id is null) "
+                "or (zone_sante is not null and zone_sante_id is null) "
+                "or (maladie is not null and maladie_id is null)"
+            )).scalar()
+            report.append(('cholera.cas_maladie', 'missing_lookup_ids', c))
+        except Exception as e:
+            report.append(('cholera.cas_maladie', 'missing_lookup_error', str(e)))
+
+        try:
+            c = conn.execute(text(
+                "select count(*) from cholera.cas_ll "
+                "where (province_notification is not null and province_notification_id is null) "
+                "or (zone_de_sante_notification is not null and zone_de_sante_notification_id is null) "
+                "or (province_provenance is not null and province_provenance_id is null) "
+                "or (zone_de_sante_provenance is not null and zone_de_sante_provenance_id is null) "
+                "or (sexe is not null and sexe_id is null) "
+                "or (unite_age is not null and unite_age_id is null) "
+                "or (hospitalisation is not null and hospitalisation_id is null) "
+                "or (prelevement is not null and prelevement_id is null) "
+                "or (tdr_realise is not null and tdr_realise_id is null) "
+                "or (tdr_resultat is not null and tdr_resultat_id is null) "
+                "or (resultat_labo is not null and resultat_labo_id is null) "
+                "or (resultat_labo_culture is not null and resultat_labo_culture_id is null) "
+                "or (resultat_labo_pcr is not null and resultat_labo_pcr_id is null) "
+                "or (issue is not null and issue_id is null) "
+                "or (statut_vaccinal is not null and statut_vaccinal_id is null) "
+                "or (classification_finale is not null and classification_finale_id is null)"
+            )).scalar()
+            report.append(('cholera.cas_ll', 'missing_lookup_ids', c))
+        except Exception as e:
+            report.append(('cholera.cas_ll', 'missing_lookup_error', str(e)))
     return report
 
 

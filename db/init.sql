@@ -38,6 +38,91 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Tables de référence pour une structure plus relationnelle
+CREATE TABLE IF NOT EXISTS cholera.pays (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.province (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    pays_id INTEGER NOT NULL REFERENCES cholera.pays(id),
+    nom VARCHAR(100) NOT NULL,
+    UNIQUE (pays_id, nom)
+);
+
+CREATE TABLE IF NOT EXISTS cholera.zone_sante (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    province_id INTEGER NOT NULL REFERENCES cholera.province(id),
+    nom VARCHAR(100) NOT NULL,
+    UNIQUE (province_id, nom)
+);
+
+CREATE TABLE IF NOT EXISTS cholera.maladie (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.issue (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.sexe (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.unite_age (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.prelevement_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.tdr_realise_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.tdr_resultat_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.resultat_labo_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.resultat_labo_culture_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.resultat_labo_pcr_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.hospitalisation_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.statut_vaccinal_status (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS cholera.classification_finale (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL UNIQUE
+);
+
 -- Table principale pour les données IDS
 CREATE TABLE IF NOT EXISTS cholera.cas_maladie (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -45,12 +130,16 @@ CREATE TABLE IF NOT EXISTS cholera.cas_maladie (
     pays VARCHAR(50) NOT NULL DEFAULT 'RDC',
     province VARCHAR(50) NOT NULL,
     zone_sante VARCHAR(100) NOT NULL,
+    pays_id INTEGER REFERENCES cholera.pays(id),
+    province_id INTEGER REFERENCES cholera.province(id),
+    zone_sante_id INTEGER REFERENCES cholera.zone_sante(id),
     population positive_integer NOT NULL DEFAULT 0,
     num_semaine week_number NOT NULL,
     annee INTEGER NOT NULL,
     debut_semaine_originale DATE,
     debut_semaine DATE NOT NULL,
     maladie VARCHAR(50) NOT NULL,
+    maladie_id INTEGER REFERENCES cholera.maladie(id),
     cas_tnn positive_integer NOT NULL DEFAULT 0,
     deces_tnn positive_integer NOT NULL DEFAULT 0,
     cas_0_11_mois positive_integer NOT NULL DEFAULT 0,
@@ -75,7 +164,7 @@ CREATE TABLE IF NOT EXISTS cholera.cas_maladie (
     unique_key INTEGER,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-    CONSTRAINT unique_case UNIQUE (code_zone, num_semaine, maladie)
+    CONSTRAINT unique_case UNIQUE (code_zone, num_semaine, maladie_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_cas_maladie_code_zone ON cholera.cas_maladie(code_zone);
@@ -103,6 +192,8 @@ CREATE TABLE IF NOT EXISTS cholera.cas_ll (
     -- Géographie
     province_notification VARCHAR(50) NOT NULL,
     zone_de_sante_notification VARCHAR(100) NOT NULL,
+    province_notification_id INTEGER REFERENCES cholera.province(id),
+    zone_de_sante_notification_id INTEGER REFERENCES cholera.zone_sante(id),
     aire_de_sante_notification VARCHAR(100),
 
     -- Période
@@ -113,10 +204,12 @@ CREATE TABLE IF NOT EXISTS cholera.cas_ll (
     -- Patient
     nom_complet VARCHAR(100),
     sexe VARCHAR(10),
+    sexe_id INTEGER REFERENCES cholera.sexe(id),
     age_annee NUMERIC(6,2),
     age_mois NUMERIC(6,2),
     age NUMERIC(6,2),
     unite_age VARCHAR(20),
+    unite_age_id INTEGER REFERENCES cholera.unite_age(id),
     age_en_ans NUMERIC(6,2),
     tranche_age VARCHAR(20),
     tranche_age_en_ans VARCHAR(20),
@@ -125,6 +218,8 @@ CREATE TABLE IF NOT EXISTS cholera.cas_ll (
     -- Provenance
     province_provenance VARCHAR(50),
     zone_de_sante_provenance VARCHAR(100),
+    province_provenance_id INTEGER REFERENCES cholera.province(id),
+    zone_de_sante_provenance_id INTEGER REFERENCES cholera.zone_sante(id),
     aire_de_sante_provenance VARCHAR(100),
     adresse TEXT,
 
@@ -137,18 +232,25 @@ CREATE TABLE IF NOT EXISTS cholera.cas_ll (
     degre_deshydratation VARCHAR(20),
     plan_de_deshydratation VARCHAR(20),
     hospitalisation VARCHAR(5),
+    hospitalisation_id INTEGER REFERENCES cholera.hospitalisation_status(id),
 
     -- Examens
     prelevement VARCHAR(5),
+    prelevement_id INTEGER REFERENCES cholera.prelevement_status(id),
     date_prelevement DATE,
     tdr_realise VARCHAR(5),
+    tdr_realise_id INTEGER REFERENCES cholera.tdr_realise_status(id),
     tdr_resultat VARCHAR(20),
+    tdr_resultat_id INTEGER REFERENCES cholera.tdr_resultat_status(id),
     tdr_archive VARCHAR(20),
     resultat_labo VARCHAR(20),
+    resultat_labo_id INTEGER REFERENCES cholera.resultat_labo_status(id),
     resultat_labo_culture VARCHAR(20),
+    resultat_labo_culture_id INTEGER REFERENCES cholera.resultat_labo_culture_status(id),
     serotype VARCHAR(20),
     nom_structure_realisant_le_tdr VARCHAR(100),
     resultat_labo_pcr VARCHAR(20),
+    resultat_labo_pcr_id INTEGER REFERENCES cholera.resultat_labo_pcr_status(id),
 
     -- Traitement
     traitement_antibiotique VARCHAR(20),
@@ -158,14 +260,17 @@ CREATE TABLE IF NOT EXISTS cholera.cas_ll (
 
     -- Issue
     issue VARCHAR(20),
+    issue_id INTEGER REFERENCES cholera.issue(id),
     date_sortie_au_ct DATE,
     etat_sortie_malade VARCHAR(20),
     statut_vaccinal VARCHAR(10),
+    statut_vaccinal_id INTEGER REFERENCES cholera.statut_vaccinal_status(id),
     nombre_dose INTEGER,
     annee_vaccination INTEGER,
     source_eventuelle_de_contamination TEXT,
     source_approvisionnement_en_eau TEXT,
     classification_finale VARCHAR(50),
+    classification_finale_id INTEGER REFERENCES cholera.classification_finale(id),
     est_cas_suspect BOOLEAN,
     est_cas_confirme BOOLEAN,
     classification_auto VARCHAR(50),

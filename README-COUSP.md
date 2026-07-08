@@ -39,6 +39,8 @@ Le loader principal est `scripts/load_data.py`. Il lit les fichiers sous le doss
 - `db/IDS_2026.xlsx` -> schema `cholera.cas_maladie`
 - `db/rdc_compilation*_LL_Cholera_*.xlsx` -> schema `cholera.cas_ll`
 
+Le script crée aussi le schéma relationnel défini dans `db/init.sql` et synchronise les tables de référence (`pays`, `province`, `zone_sante`, `maladie`, `sexe`, etc.) à partir des données importées.
+
 Exécution:
 
 ```powershell
@@ -67,7 +69,7 @@ Chaque exécution écrit un log CSV dans le dossier `logs/` nommé `corrections_
 
 5) Vérifier l’état des données (checks rapides)
 
-Un utilitaire simple est fourni: `scripts/check_data.py`. Il exécute quelques contrôles (comptes, clés nulles, duplications simples) et écrit un rapport dans `logs/check_data_YYYYMMDD_HHMMSS.txt`.
+Un utilitaire simple est fourni: `scripts/check_data.py`. Il exécute quelques contrôles (comptes, clés nulles, duplications simples) et vérifie aussi la synchronisation des clés de référence relationnelles (`*_id`) pour `cas_maladie` et `cas_ll`.
 
 ```powershell
 python scripts/check_data.py

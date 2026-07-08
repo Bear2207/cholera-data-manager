@@ -41,6 +41,28 @@ services:
     networks:
       - cholera-network
 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cholera-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./app:/var/www/html # Monte le dossier app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-ids_db}
+      - DB_USER=${POSTGRES_USER:-bearing}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-Couspdata}
+    networks:
+      - cholera-network
+
 volumes:
   postgres_data:
   pgadmin_data:
