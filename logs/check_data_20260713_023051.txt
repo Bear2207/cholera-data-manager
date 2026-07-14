@@ -1,0 +1,6 @@
+('cholera.cas_maladie', 'count', 0)
+('cholera.cas_ll', 'count', 0)
+('cholera.pays', 'count', 0)
+('cholera.province', 'count', 0)
+('cholera.zone_sante', 'count', 0)
+('cholera.maladie', 'count', 0)

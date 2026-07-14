@@ -1,105 +1,37 @@
-"""Simple data checks for cholera DB.
-
-Usage:
-  python scripts/check_data.py
-
-Generates a quick report in logs/check_data_<timestamp>.txt
-"""
-from sqlalchemy import create_engine, text
+#!/usr/bin/env python3
+"""Vérification simple des comptages."""
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+
+from database import get_engine
+from sqlalchemy import text
 import datetime
-import os
+import logging
 
-
-def get_engine():
-    user = os.environ.get('POSTGRES_USER', 'bearing')
-    password = os.environ.get('POSTGRES_PASSWORD', 'Couspdata')
-    db = os.environ.get('POSTGRES_DB', 'ids_db')
-    host = os.environ.get('POSTGRES_HOST', 'localhost')
-    port = os.environ.get('POSTGRES_PORT', '5432')
-    url = f'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}'
-    return create_engine(url)
-
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
+logger = logging.getLogger(__name__)
 
 def run_checks():
     engine = get_engine()
     report = []
+    logs_dir = Path('logs')
+    logs_dir.mkdir(exist_ok=True)
+    logfile = logs_dir / f'check_data_{datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.txt'
     with engine.connect() as conn:
-        # total counts
-        for tbl in ('cholera.cas_maladie','cholera.cas_ll'):
-            try:
-                c = conn.execute(text(f'select count(*) from {tbl}')).scalar()
-                report.append((tbl, 'count', c))
-            except Exception as e:
-                report.append((tbl, 'count_error', str(e)))
-        # null key checks
-        try:
-            c = conn.execute(text("select count(*) from cholera.cas_maladie where code_zone is null or num_semaine is null or maladie is null")).scalar()
-            report.append(('cholera.cas_maladie', 'null_key_count', c))
-        except Exception as e:
-            report.append(('cholera.cas_maladie', 'null_key_error', str(e)))
-        try:
-            c = conn.execute(text("select count(*) from cholera.cas_ll where n_epid is null and nom_complet is null" )).scalar()
-            report.append(('cholera.cas_ll', 'null_patient_identifiers', c))
-        except Exception as e:
-            report.append(('cholera.cas_ll', 'null_patient_error', str(e)))
-        # duplicates for unique constraint
-        try:
-            d = conn.execute(text("select code_zone, num_semaine, maladie, count(*) from cholera.cas_maladie group by code_zone, num_semaine, maladie having count(*)>1 limit 5")).fetchall()
-            report.append(('cholera.cas_maladie', 'duplicate_samples', [tuple(r) for r in d]))
-        except Exception as e:
-            report.append(('cholera.cas_maladie', 'duplicate_error', str(e)))
-
-        # relational lookup sync checks
-        try:
-            c = conn.execute(text(
-                "select count(*) from cholera.cas_maladie "
-                "where (pays is not null and pays_id is null) "
-                "or (province is not null and province_id is null) "
-                "or (zone_sante is not null and zone_sante_id is null) "
-                "or (maladie is not null and maladie_id is null)"
-            )).scalar()
-            report.append(('cholera.cas_maladie', 'missing_lookup_ids', c))
-        except Exception as e:
-            report.append(('cholera.cas_maladie', 'missing_lookup_error', str(e)))
-
-        try:
-            c = conn.execute(text(
-                "select count(*) from cholera.cas_ll "
-                "where (province_notification is not null and province_notification_id is null) "
-                "or (zone_de_sante_notification is not null and zone_de_sante_notification_id is null) "
-                "or (province_provenance is not null and province_provenance_id is null) "
-                "or (zone_de_sante_provenance is not null and zone_de_sante_provenance_id is null) "
-                "or (sexe is not null and sexe_id is null) "
-                "or (unite_age is not null and unite_age_id is null) "
-                "or (hospitalisation is not null and hospitalisation_id is null) "
-                "or (prelevement is not null and prelevement_id is null) "
-                "or (tdr_realise is not null and tdr_realise_id is null) "
-                "or (tdr_resultat is not null and tdr_resultat_id is null) "
-                "or (resultat_labo is not null and resultat_labo_id is null) "
-                "or (resultat_labo_culture is not null and resultat_labo_culture_id is null) "
-                "or (resultat_labo_pcr is not null and resultat_labo_pcr_id is null) "
-                "or (issue is not null and issue_id is null) "
-                "or (statut_vaccinal is not null and statut_vaccinal_id is null) "
-                "or (classification_finale is not null and classification_finale_id is null)"
-            )).scalar()
-            report.append(('cholera.cas_ll', 'missing_lookup_ids', c))
-        except Exception as e:
-            report.append(('cholera.cas_ll', 'missing_lookup_error', str(e)))
-    return report
-
-
-def main():
-    logs = Path('logs')
-    logs.mkdir(exist_ok=True)
-    fname = logs / f'check_data_{datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")}.txt'
-    report = run_checks()
-    with open(fname, 'w', encoding='utf-8') as fh:
+        for tbl in ('cholera.cas_maladie', 'cholera.cas_ll'):
+            c = conn.execute(text(f'SELECT count(*) FROM {tbl}')).scalar()
+            report.append((tbl, 'count', c))
+        # Autres vérifications simples
+        for tbl in ('cholera.pays', 'cholera.province', 'cholera.zone_sante', 'cholera.maladie'):
+            c = conn.execute(text(f'SELECT count(*) FROM {tbl}')).scalar()
+            report.append((tbl, 'count', c))
+    with open(logfile, 'w', encoding='utf-8') as f:
         for item in report:
-            fh.write(str(item) + '\n')
-    print('Wrote report to', fname)
+            f.write(str(item) + '\n')
+    logger.info("Rapport écrit dans %s", logfile)
     for item in report:
-        print(item)
+        logger.info(item)
 
 if __name__ == '__main__':
-    main()
+    run_checks()

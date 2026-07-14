@@ -1,0 +1,5 @@
+('cholera.cas_maladie', 'count', 262862)
+('cholera.cas_ll', 'count', 82178)
+('cholera.cas_maladie', 'null_key_count', 0)
+('cholera.cas_ll', 'null_patient_identifiers', 22)
+('cholera.cas_maladie', 'duplicate_samples', [('RDCEQTBLG03', 3, 'PFA', 2), ('RDCKWAKIM05', 5, 'PNEUMONIE', 2), ('RDCTPALGM4', 4, 'GRIPPE', 2), ('LOMIDSLUB05', 5, 'PALUDISME CONF', 2), ('RDCKCEBOB04', 4, 'PALUDISME SUSP', 2)])

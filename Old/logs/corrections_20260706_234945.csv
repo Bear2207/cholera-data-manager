@@ -1,0 +1,219 @@
+table,column,pattern,replacement,affected
+cholera.cas_ll,issue,^(dcd),Deceder,0
+cholera.cas_ll,issue,^dec.*|dcd|dcd communautaire|deces.*|morte?|mortte?|d ecede,Deceder,4
+cholera.cas_ll,issue,^oui$|^oui decede$,Deceder,2
+cholera.cas_ll,issue,^dec.*|dcd|dcd communautaire|deces.*|morte?|mortte?|apporte? mort(e)?|arrive mort|oui decede,Deceder,4
+cholera.cas_ll,issue,^(dec[eé]d[ée]?|deceder|decedee|decede.*)$,Deceder,0
+cholera.cas_ll,issue,^(mort(e|te)?|aporte mort|apporte mort|arrive mort)$,Deceder,0
+cholera.cas_ll,issue,^(en cours.*),En cours,629
+cholera.cas_ll,issue,^trait.*|s/ttt|ttt en cours|sou,En cours,6913
+cholera.cas_ll,issue,^encours|^encourt|^en cours|hospitalis.*|reste en observation.*|prise en charge.*|trait.*en cours|tra.*en cours,En cours,629
+cholera.cas_maladie,pays,République démocratique du Congo,RDC,0
+cholera.cas_maladie,province,SKV,SK,0
+cholera.cas_ll,resultat_labo,NON,Non,945
+cholera.cas_ll,resultat_labo,Non realise,Non,0
+cholera.cas_ll,resultat_labo,Negatif,Negatif,0
+cholera.cas_ll,resultat_labo,Positif,Positif,478
+cholera.cas_ll,resultat_labo,Oui,Positif,0
+cholera.cas_ll,sexe,F,Féminin,18967
+cholera.cas_ll,sexe,f,Féminin,18967
+cholera.cas_ll,sexe,FEMININ,Féminin,0
+cholera.cas_ll,sexe,M,Masculin,40757
+cholera.cas_ll,sexe,m,Masculin,40757
+cholera.cas_ll,sexe,HH,Masculin,0
+cholera.cas_ll,sexe,H,Masculin,0
+cholera.cas_ll,sexe,Feminin,Féminin,0
+cholera.cas_ll,sexe,feminin,Féminin,0
+cholera.cas_ll,sexe,masculin,Masculin,21790
+cholera.cas_ll,sexe,mm,Masculin,0
+cholera.cas_ll,sexe,ff,Féminin,0
+cholera.cas_ll,sexe,f|FF,Féminin,18967
+cholera.cas_ll,sexe,^[Ff]em(m)?e?$,Féminin,0
+cholera.cas_ll,sexe,^[Mm](ale)?$,Masculin,0
+cholera.cas_ll,sexe,masc|hom,Masculin,21790
+cholera.cas_ll,sexe,g,Masculin,0
+Standard,,INCONNU,inconnu,NO_TABLE
+cholera.cas_ll,tdr_realise,negatif,Oui,0
+cholera.cas_ll,tdr_realise,positif,Oui,0
+cholera.cas_ll,tdr_realise,nom,Non,0
+cholera.cas_ll,tdr_realise,non real,Non,0
+cholera.cas_ll,tdr_realise,ras,Non,0
+cholera.cas_ll,tdr_realise,non connu,Non,0
+cholera.cas_ll,tdr_realise,nd,Non,0
+cholera.cas_ll,tdr_realise,^(nd),Non,0
+cholera.cas_ll,tdr_realise,^(oui)$,Oui,5403
+cholera.cas_ll,tdr_realise,^(positif),Oui,0
+cholera.cas_ll,tdr_realise,^(negatif),Oui,0
+cholera.cas_ll,tdr_realise,.*real.*,Realise,0
+cholera.cas_ll,tdr_realise,non connu,Non realise,0
+cholera.cas_ll,tdr_realise,^nd,Non,0
+cholera.cas_ll,tdr_realise,^positif,Oui,0
+cholera.cas_ll,tdr_resultat,En attente,En cours,0
+cholera.cas_ll,tdr_resultat,En cours,En cours,1
+cholera.cas_ll,tdr_resultat,^(en attente|en cours|réalisé|realise[eé]?)$,En cours,1
+cholera.cas_ll,tdr_resultat,^(non connu),inconnu,0
+cholera.cas_ll,tdr_resultat,^(nd),inconnu,0
+cholera.cas_ll,tdr_resultat,Nd,inconnu,0
+cholera.cas_ll,tdr_resultat,^(non fait|non prelev[eé]?|non realiee|inconnu|nd|nc|pas|pas des selles|ras|tdr|trd|utc.*|cs.*|ctc.*|site.*|doxy|.*kokolo)$,inconnu,23
+cholera.cas_ll,tdr_resultat,^(0|o1|)$,inconnu,0
+cholera.cas_ll,tdr_resultat,^(neg.*),Negatif,0
+cholera.cas_ll,tdr_resultat,Gatif,Negatif,2542
+cholera.cas_ll,tdr_resultat,G,Negatif,2542
+cholera.cas_ll,tdr_resultat,N0n,Negatif,0
+cholera.cas_ll,tdr_resultat,^(negatif|négatif|ngatif|gatif|n0n|nf|nr)$,Negatif,2542
+cholera.cas_ll,tdr_resultat,negatif,Negatif,0
+cholera.cas_ll,tdr_resultat,^(pos.*),Positif,8696
+cholera.cas_ll,tdr_resultat,^(pos.*|posit.*)$,Positif,8696
+cholera.cas_ll,unite_age,Ans,ans,0
+cholera.cas_ll,unite_age,jour,Jours,0
+cholera.cas_ll,unite_age,jours,Jours,0
+cholera.cas_ll,unite_age,année,ans,0
+cholera.cas_ll,resultat_labo_pcr,^(pos[i|t]?.*|poitif|vc0?1|vco1)$,Positif,621
+cholera.cas_ll,resultat_labo_pcr,^(neg.*|non cas)$,Negatif,0
+cholera.cas_ll,resultat_labo_pcr,^(attente|en attente|en cours)$,En attente,74
+cholera.cas_ll,resultat_labo_pcr,^(nd|non connu|non prelev[eé]s?|non reali[sz][ée]?|tdr|trd|ras|non realiee|non\sreali[ée]e)$,inconnu,0
+cholera.cas_ll,resultat_labo_pcr,^(Inconnu|inconnu)$,inconnu,2009
+cholera.cas_ll,issue,^trait.*|s/ttt|ttt en cours|sous traitement|traiment en cours|traint en cours|traint.*,En cours,6913
+cholera.cas_ll,issue,^encours$|^encourt$|^en cours$|^en hospitalisation$|^hospitalis.*|reste en observation.*|prise en charge.*|trait.*en cours|ttt en cours|tra.*en cours,En cours,629
+cholera.cas_ll,issue,^(en cours|encours|encourt|en court)$,En cours,629
+cholera.cas_ll,issue,^(sous traitement|ttt en cours|s/ttt)$,En cours,0
+cholera.cas_ll,issue,^(evade.*),Evader,0
+cholera.cas_ll,issue,^evad.*|evadde,Evader,0
+cholera.cas_ll,issue,^evad.*|evadde,Evader,0
+cholera.cas_ll,issue,^(evader|evadde|evadde)$,Evader,0
+cholera.cas_ll,issue,^(guer.*),Gueri,0
+cholera.cas_ll,issue,^(sortie),Gueri,0
+cholera.cas_ll,issue,^guer.*|geurri|gu$,Gueri,0
+cholera.cas_ll,issue,^(gueri|guerri|geurri)$,Gueri,0
+cholera.cas_ll,issue,^non vaccine$,inconnu,136
+cholera.cas_ll,issue,^20[0-9]{2}-[0-9]{2}-[0-9]{2}$,inconnu,0
+cholera.cas_ll,issue,^[0-9]+$,inconnu,0
+cholera.cas_ll,issue,^non vaccine$|^négatif$,inconnu,136
+cholera.cas_ll,issue,^<na>$|^$|^0$,inconnu,0
+cholera.cas_ll,issue,^20[0-9]{2}-[0-9]{2}-[0-9]{2}$,inconnu,0
+cholera.cas_ll,issue,^\d{4}-\d{2}-\d{2}$,inconnu,0
+cholera.cas_ll,issue,^(non cas)$,Negatif,0
+cholera.cas_ll,issue,^sorti sans avis medical,Sorti,0
+cholera.cas_ll,issue,^sorti sans avis medical,Sorti,0
+cholera.cas_ll,issue,^(sorti|sorti sans avis medical|sorte)$,Sorti,0
+cholera.cas_ll,issue,^(trait.*),Traiter,6913
+cholera.cas_ll,issue,^(vivant.*),Traiter,6179
+cholera.cas_ll,issue,^(traiter|traitement|traiment|traint|trainte|trat)$,Traiter,4221
+cholera.cas_ll,issue,^(refere.*),Transferer,0
+cholera.cas_ll,issue,^transf.*,Transferer,311
+cholera.cas_ll,issue,^transf.*|transfere[eé]?|transferer|transfert.*,Transferer,311
+cholera.cas_ll,issue,^(transf(er|ere|eree|ert|ert[ée])|transfert)$,Transferer,0
+cholera.cas_ll,resultat_labo_pcr,^(positif|pos|posi|poitif|posi[t]?if)$,Positif,615
+cholera.cas_ll,resultat_labo_pcr,^(negatif|négatif|neg|negatif)$,Negatif,1584
+cholera.cas_ll,resultat_labo_pcr,^(en attente|attente|en cours d['’]analyse)$,Negatif,74
+cholera.cas_ll,resultat_labo_pcr,"^(non prelev[eé]?|non realise[e]?|non realiee|non realise|non connu|nd|nc)$""",inconnu,0
+cholera.cas_ll,resultat_labo_pcr,^(ras|tdr|trd)$,inconnu,0
+cholera.cas_ll,resultat_labo_pcr,^(0|)$,inconnu,0
+cholera.cas_ll,tdr_resultat,Confirme,Positif,0
+cholera.cas_ll,tdr_resultat,Poisitif,Positif,0
+cholera.cas_ll,tdr_resultat,Poitif,Positif,0
+cholera.cas_ll,tdr_resultat,^(positif|poisitif|poitif|test positif|vco ?\d+|vc0?1|vc0?139)$,Positif,8696
+cholera.cas_ll,tdr_resultat,^(oui)$,Positif,0
+cholera.cas_ll,tdr_resultat,^(vco\s?\d+|vc0?\d+)$,Positif,0
+cholera.cas_ll,tdr_resultat,^(vco\s?\d+)$,Positif,0
+cholera.cas_ll,tdr_resultat,vc0?\d+)$`,Positif,0
+cholera.cas_ll,tdr_resultat,^(en attente|en cours|réalisé|realise[eé]?)$,En cours,1
+cholera.cas_ll,tdr_resultat,^(g|gatif|nf|ngatif|negatif|négatif|n0n)$,Negatif,2542
+cholera.cas_ll,tdr_resultat,^(poisitif|poitif|test.*|o1|positif|pos.*)$,Positif,8696
+cholera.cas_ll,tdr_resultat,^(non realiee|non fait|non preleve|nr|inconnu|nd|nc|pas|ras|pas des selles)$,inconnu,23
+cholera.cas_ll,prelevement,^(en[ \-_]?cours?|encour|en[ \-_]?attente)$,En cours,0
+cholera.cas_ll,prelevement,^(<na>|nan|vide|^\s*)$,inconnu,0
+cholera.cas_ll,prelevement,^(non connu|ras)$,inconnu,0
+cholera.cas_ll,prelevement,^(nd|nf|nom|non prelev[eé]?|pas des selles|non nreleve)$,Non,0
+cholera.cas_ll,prelevement,^(non[\s_-]?prelev[eé]?[eé]?)$,Non,0
+cholera.cas_ll,prelevement,^(non fait|non pr[eé]lev[eé]?|non reali[ée]e?|nr|nd|nc|pas.*|ras|non)$,Non,8666
+cholera.cas_ll,prelevement,"^\d{1,2}/\d{1,2}/\d{2,4}$",Oui,0
+cholera.cas_ll,prelevement,^(oui|\+|severe|positif|positive)$,Oui,20737
+cholera.cas_ll,prelevement,^(negatif|négatif|negative|ngatif|gatif|nf|nr)$,Oui,0
+cholera.cas_ll,prelevement,^(refer[ée]?|refere)$,Reprendre,0
+cholera.cas_ll,prelevement,^\d{4}-\d{2}-\d{2}$,Oui,0
+cholera.cas_ll,hospitalisation,^(arrive mort|decede|mort)$,Deceder,0
+cholera.cas_ll,hospitalisation,^(<na>|nan|none|null)?$,inconnu,0
+cholera.cas_ll,hospitalisation,^(<na>|nan|none|null)$,inconnu,0
+cholera.cas_ll,hospitalisation,^(nonm?|non\s?.*)$,Non,1416
+cholera.cas_ll,hospitalisation,^(refus)$,Non,0
+cholera.cas_ll,hospitalisation,^(27\/03\/2025|[0-3]?\d\/[01]?\d\/\d{4})$,Oui,0
+cholera.cas_ll,hospitalisation,^(observ.*)$,Oui,0
+cholera.cas_ll,hospitalisation,^(o[\s]?ui)$,Oui,38155
+cholera.cas_ll,hospitalisation,^(oui)$,Oui,38155
+cholera.cas_ll,hospitalisation,^(oui\/utc.*)$,Oui,0
+cholera.cas_ll,hospitalisation,^(hopitalie[e]?)$,Oui,0
+cholera.cas_ll,hospitalisation,^(0ui)$,Oui,0
+cholera.cas_ll,hospitalisation,^(severe)$,Oui,0
+cholera.cas_ll,hospitalisation,^(refferer au 2em jr a kokoklo)$,Oui,0
+cholera.cas_ll,hospitalisation,^\d{4}-\d{2}-\d{2}$,Oui,0
+cholera.cas_ll,degre_deshydratation,^(dcd|décédé|decede|décedé|decedé)$,Deceder,0
+cholera.cas_ll,degre_deshydratation,^(léger(e)?|leger(e)?)$,Leger,506
+cholera.cas_ll,degre_deshydratation,^(mod[eé]r[ée]?|moderee)$,Moderer,11169
+cholera.cas_ll,degre_deshydratation,^(s[eé]v[eè]r[e]?)$,Severe,27632
+cholera.cas_ll,degre_deshydratation,^(sevre|svere|tr[eè]s s[eé]v[eè]re?)$,Severe,0
+cholera.cas_ll,degre_deshydratation,^(oui)$,Present,0
+cholera.cas_ll,prise_antibiotique_avant_admission,^(pas(\sde)?(\sdes)?(hydratation|hyd)?)$,Aucun,0
+cholera.cas_ll,prise_antibiotique_avant_admission,^(pas(\s(de|des)?)?\sdes?y?dr(atation|ate)?)$,Aucun,0
+cholera.cas_ll,prise_antibiotique_avant_admission,^(non|n|pas(\s(de|des)?)?\s?d[eé]?s?y?d(?:ratation|rate)?)$,Aucun,9982
+cholera.cas_ll,prise_antibiotique_avant_admission,^(pas des deshydratation|pas deshydrate)$,Aucun,0
+cholera.cas_ll,prise_antibiotique_avant_admission,^(<na>|nan|none|null)?$,inconnu,0
+cholera.cas_ll,prise_antibiotique_avant_admission,^(ne sait pas|sais pas|ras|non connu)$,inconnu,0
+cholera.cas_ll,resultat_labo_culture,^(negatif|négatif|ngatif|gatif|n0n|nf|nr|non fait|non prelev[eé]?|non realis[ée]?)$,Negatif,176
+cholera.cas_ll,resultat_labo_culture,^(positif|pos|poisitif|poitif|test positif|vc0?1.*|vco ?\d+.*)$,Positif,249
+cholera.cas_ll,resultat_labo,^(realise[eé]?|réalis[eé]?)$,Positif,0
+cholera.cas_ll,resultat_labo,^(en cours|enc.*)$,En cours,91
+cholera.cas_ll,resultat_labo,^(negatif|n[ée]gatif)$,Negatif,2665
+cholera.cas_ll,resultat_labo,n[ée]gatif)$,Negatif,0
+cholera.cas_ll,resultat_labo,^(negatif),Negatif,0
+cholera.cas_ll,resultat_labo,^(oui|positf|positif|p[oö]sitif|postif|v\.?c0?1(\s*inaba)?|vco\s?1|vco1|vo1|v.c 01 inaba)$,Positif,475
+cholera.cas_ll,resultat_labo,^(oui)$,Positif,0
+cholera.cas_ll,resultat_labo,^(n[ée]gatif)$,Negatif,2665
+cholera.cas_ll,resultat_labo,^(oui.*)$,Positif,0
+cholera.cas_ll,resultat_labo,"^(non\s+connu|nd|ras|,non connu|nan|non|inconnu)$",inconnu,1614
+Symptomes,,(?i)d\+,Diarrhée,NO_TABLE
+Symptomes,,(?i)d\+\+,Diarrhée sévère,NO_TABLE
+Symptomes,,(?i)v\+,Vomissement,NO_TABLE
+Symptomes,,(?i)v\+\+,Vomissement ++,NO_TABLE
+Symptomes,,(?i)v\+\+\+,Vomissement +++,NO_TABLE
+Symptomes,,(?i)diarh(é|e)e.*vomis,Diarrhée Vomissement,NO_TABLE
+Symptomes,,(?i)diarh(é|e)e aqueuse.*,Diarrhée aqueuse,NO_TABLE
+Symptomes,,(?i)yeux.*orbite,Yeux enfoncés,NO_TABLE
+Symptomes,,(?i)plis cutan(e|é).*lent,Déshydratation,NO_TABLE
+Symptomes,,(?i)asthénie,Asthénie,NO_TABLE
+Symptomes,,(?i)vomis,Vomissement,NO_TABLE
+Symptomes,,(?i)émission des selles,Selles liquides,NO_TABLE
+Symptomes,,(?i)selles.*liquide,Selles liquides,NO_TABLE
+Symptomes,,(?i)ESL.*,Selles liquides,NO_TABLE
+Symptomes,,(?i)EST,Etat general,NO_TABLE
+Symptomes,,(?i)NON,Absence symptôme,NO_TABLE
+Symptomes,,(?i)convulsion,Convulsion,NO_TABLE
+cholera.cas_ll,antecedents_morbides,^\s*$,inconnu,0
+cholera.cas_ll,antecedents_morbides,^\s*(aucun|aucune|pas|ras|néant)\s*$,Aucun,5391
+cholera.cas_ll,antecedents_morbides,^\s*mod[eé]r[ée]?[eé]?\s*$,Moderer,161
+cholera.cas_ll,antecedents_morbides,^\s*s[eéè]v[eè]r[ée]?\s*$,Severe,78
+cholera.cas_ll,antecedents_morbides,^\s*oui\s*$,Oui,72
+cholera.cas_ll,antecedents_morbides,^\s*ant[eé]c[eé]dent.*$,Oui,0
+cholera.cas_ll,antecedents_morbides,^\s*n[ou]n\s*$,Non,12331
+cholera.cas_ll,antecedents_morbides,^\s*pas d[’\']?ant[eé]c[eé]dent.*$,Aucun,0
+cholera.cas_ll,serotype,"^(0|0,5|1|2|3|4|5|6|7|8|9|10|16|23,5|3L|4L|5L|6L|doxy)$",O1,388
+cholera.cas_ll,serotype,^(inaba|inba|inrb)\s*$,Inaba,637
+cholera.cas_ll,serotype,^(ogawa)\s*$,Ogawa,274
+cholera.cas_ll,serotype,^(labo|nd|negatif|positif|\s*)$,inconnu,1654
+cholera.cas_ll,tdr_realise,^positif$,Oui,0
+cholera.cas_ll,tdr_resultat,Positif,Positif,8696
+cholera.cas_ll,tdr_realise,0ui,Oui,0
+cholera.cas_ll,tdr_realise,Positiff,Oui,0
+cholera.cas_ll,resultat_labo_pcr,Non,Negatif,465
+cholera.cas_ll,sexe,T,Masculin,0
+cholera.cas_ll,profession,(?i)^efant$,Enfant,0
+cholera.cas_ll,profession,(?i)^enfant$,Enfant,2958
+cholera.cas_ll,profession,(?i)^(cultivateur(rice)?)$,Cultivateur(trice),0
+cholera.cas_ll,profession,(?i)^(infirmier|infirmiere)$,Infirmier(iere),0
+cholera.cas_ll,profession,(?i)^eleve$,Élève,0
+cholera.cas_ll,profession,(?i)^technicien(\s+(de\s+)?)?labo$,Technicien de labo,0
+cholera.cas_ll,profession,(?i)^(infirmier(e)?)$,Infirmier(iere),0
+cholera.cas_ll,profession,Cultivatrice,Cultivateur(trice),0
+cholera.cas_ll,statut_vaccinal,Oui,Vaccine,2375
+cholera.cas_ll,statut_vaccinal,Nv,Non Vaccine,0
+cholera.cas_ll,classification_finale,Confirme,Confirmer,0

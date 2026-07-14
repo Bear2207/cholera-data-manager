@@ -1,0 +1,15 @@
+{
+    "include": [
+        "scripts",
+        "src"
+    ],
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [
+                "src"
+            ]
+        }
+    ],
+    "typeCheckingMode": "basic"
+}

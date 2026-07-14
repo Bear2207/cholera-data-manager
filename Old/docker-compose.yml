@@ -1,0 +1,96 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgis/postgis:latest
+    container_name: cholera-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ids_db}
+      POSTGRES_USER: ${POSTGRES_USER:-bearing}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Couspdata}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./db/data:/data:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bearing} -d ${POSTGRES_DB:-ids_db}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    networks:
+      - cholera-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cholera-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-data.analyse@cousp.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-DataCousp}
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - cholera-network
+
+  superset:
+    image: apache/superset:4.1.1
+    container_name: cholera-superset
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:-change-me}
+      SUPERSET_LOAD_EXAMPLES: "0"
+    ports:
+      - "${SUPERSET_PORT:-8088}:8088"
+    volumes:
+      - superset_home:/app/superset_home
+    command: >
+      /bin/sh -c "
+      superset db upgrade &&
+      superset fab create-admin --username ${SUPERSET_ADMIN_USERNAME:-admin} --firstname Admin --lastname User --email ${SUPERSET_ADMIN_EMAIL:-admin@example.com} --password ${SUPERSET_ADMIN_PASSWORD:-admin} &&
+      superset init &&
+      gunicorn --workers 2 --bind 0.0.0.0:8088 --timeout 60 --limit-request-line 0 'superset.app:create_app()'"
+    networks:
+      - cholera-network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cholera-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./app:/var/www/html # Monte le dossier app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB:-ids_db}
+      - DB_USER=${POSTGRES_USER:-bearing}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-Couspdata}
+    networks:
+      - cholera-network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  superset_home:
+
+networks:
+  cholera-network:
+    driver: bridge
